@@ -19,27 +19,18 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Make Gradle wrapper executable
-      run: chmod +x ./gradlew || true
-
-    - name: Build Debug APK with Gradle
+    - name: Build with Gradle
       run: |
+        chmod +x ./gradlew || true
         if [ -f "./gradlew" ]; then
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
         else
-          gradle assembleDebug
-        /fi
-      continue-on-error: true
+          gradle assembleDebug --stacktrace
+        fi
 
-    - name: Fallback Build if no wrapper
-      run: gradle assembleDebug
-      continue-on-error: true
-
-    - name: Upload APK Artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-apk
-        path: |
-          app/build/outputs/apk/debug/app-debug.apk
-          **/build/outputs/apk/debug/*.apk
-          
+        name: my-debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+        
